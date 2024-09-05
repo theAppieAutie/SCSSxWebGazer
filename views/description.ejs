@@ -15,9 +15,12 @@
         <link rel="icon" href="/public/assets/favicon.webp" type="image/x-icon">
         <!-- Page Title -->
         <title>Security Control Simulation System</title>
+        <script>
+            var webGazerInit = false;
+        </script>
     </head>
 
-<body>
+<body onload="initialiseWebGazer()">
     <!-- Navigation Bar -->
     <nav class="custom-navbar">
         <div class="navbar-logo">
@@ -38,7 +41,12 @@
 </body>
 <script>
     document.getElementById("proceedToRules").addEventListener("click", () => {
-        window.location.href = '/information/rules';
+        if (webGazerInit) {
+            pauseWebGazer();
+            window.location.href = '/information/rules';
+        } else {
+            window.alert("Please wait to provide consent for the webcam access")
+        }
     })
 </script>
 </html>

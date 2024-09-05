@@ -17,7 +17,7 @@ function checkGazeSection(x, y) {
     }
 }
 
-window.onload = function() {
+function initialiseWebGazer() {
     webgazer.setRegression('ridge')
             .setGazeListener(function(data, elapsedTime) {
                 if (data == null || !data.x || !data.y) {
@@ -28,7 +28,25 @@ window.onload = function() {
 
                 checkGazeSection(x,y);
             })
+            .showVideo(false)
+            .showPredictionPoints(false)
             .begin();
+    webGazerInit = true;
+}
+
+function pauseWebGazer() {
+    webgazer.pause();
+    console.log("webgazer paused");
+}
+
+function resumeWebGazer() {
+    webgazer.resume();
+    console.log("Webgazer continued");
+}
+
+function endWebGazer() {
+    // clean up stored data
+    webgazer.end()
 }
 
 

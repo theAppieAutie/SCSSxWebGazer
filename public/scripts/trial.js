@@ -1,6 +1,6 @@
 import { initializeClassificationButtons, confirmClassification } from './classification.js';
 import {config} from "./config.js";
-import setupWebGazer from "./webgazerHandler.js";
+
 
 //  object holding censored item list to add blur
 const censoredOptions = {
@@ -166,7 +166,7 @@ const startTrial = () => {
   
 // handle end of the trial
 const endTrial = () => {
-  
+  pauseWebGazer();
   let inputs = [];
   for (let [k,v] of packetArray.entries()) {
     if (v.classification !== v.recommendation) {
