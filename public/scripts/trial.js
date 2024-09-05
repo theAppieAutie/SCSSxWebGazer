@@ -1,5 +1,6 @@
 import { initializeClassificationButtons, confirmClassification } from './classification.js';
-import {config} from "./config.js"
+import {config} from "./config.js";
+import setupWebGazer from "./webgazerHandler.js";
 
 //  object holding censored item list to add blur
 const censoredOptions = {
@@ -18,13 +19,13 @@ const censoredOptions = {
 
 // Function to change game styles based on the group
 const adjustGameStyles = () => {
-const game = document.getElementById("game");
-game.style.maxWidth = "60vw";
-game.style.maxHeight = "60vh";
-game.style.marginRight = "1vw";
+  const game = document.getElementById("game");
+  game.style.maxWidth = "60vw";
+  game.style.maxHeight = "60vh";
+  game.style.marginRight = "1vw";
 };
 
-document.addEventListener("DOMContentLoaded", adjustGameStyles);
+document.addEventListener("DOMContentLoaded", adjustGameStyles());
 
 // initiate advisor recommendations and attach to packets
 const numberWrong= Math.round((100 - config.advisorAccuracy) / 100 * packetArray.length);
@@ -85,6 +86,7 @@ document.getElementById("hostile").addEventListener("click", () => confirmClassi
 
 // Define the `start` function to initialize the game
 const startTrial = () => {
+
     let selectedDot = null;
   
     const timeForTrial = config.trialLength * 60000;
