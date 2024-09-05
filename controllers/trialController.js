@@ -1,19 +1,10 @@
-const cloudServices = require("../services/cloudServices");
-const flaskServices = require("../services/flaskServices");
-
-
-// function to get video download and handle the formatting to go here
-
-
-
-
 
 exports.startTrial = async (req, res, next) => {
     try {
         if (!req.session.condition) {
             return res.redirect('/');
         }
-        await flaskServices.handleRecording("start");
+        
         
         // Retrieve experiment info
         
@@ -51,11 +42,6 @@ exports.startTrial = async (req, res, next) => {
 exports.stopTrial = async (req, res, next) => {
     try {
         const trialEndTime = req.body["trialEndTime"];
-        
-        await flaskServices.handleRecording('stop');
-        const trialVideo = await flaskServices.downloadVideo();
-        const trialVideoName = `/EXP 1/${req.session.participantId} - ${req.session.trialNumber}`; 
-        await cloudServices.uploadVideo(trialVideo, trialVideoName)
 
         const trialType = req.session.trialNumber === 0 ? 'test' : 'main';
         
