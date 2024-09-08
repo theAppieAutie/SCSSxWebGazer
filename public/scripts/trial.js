@@ -60,6 +60,9 @@ const gameObj = document.getElementById("game");
 const panelsElement = document.getElementsByClassName("panels")[0];
 let selectedDotInfo = null;
 let dotElement = null;
+const timeForTrial = config.trialLength * 60000;
+const timePerPacket = (config.packetTimeOnScreen * 1000) * packetArray.length <= timeForTrial ? config.packetTimeOnScreen * 1000 : timeForTrial / packetArray.length; 
+
 
 
 // set up trial view
@@ -84,89 +87,88 @@ document.getElementById("trusted").addEventListener("click", () => confirmClassi
 document.getElementById("suspect").addEventListener("click", () => confirmClassification(dotElement, selectedDotInfo, "suspect"));
 document.getElementById("hostile").addEventListener("click", () => confirmClassification(dotElement, selectedDotInfo, "hostile"));
 
+let selectedDot = null;
+
+const selectDot = (dotElement) => {
+  if (selectedDot) {
+    selectedDot.classList.remove('selected');
+  }
+  selectedDot = dotElement;
+  selectedDot.classList.add('selected');
+};
+
+
+// Function to update connection information
+const updateConnectionInfo = (info) => {
+  document.getElementById('info-ip').textContent = `IP Address: ${info.ipAddress}`;
+  document.getElementById('info-country').textContent = `Country: ${info.country}`;
+  document.getElementById('info-checksum').textContent = `Checksum: ${info.checkSum}`;
+  document.getElementById('info-protocol').textContent = `Protocol: ${info.protocol}`;
+  document.getElementById('info-time').textContent = `Connection Time: ${info.time}`;
+  document.getElementById('info-certificates').textContent = `Certificates: ${info.certificates}`;
+  document.getElementById('info-portnumber').textContent = `Port Number: ${info.portNumber}`;
+  document.getElementById('info-classification').textContent = `Classification: ${info.classification}`;
+  document.getElementById('advice').textContent = `Recommendation: ${info.recommendation}`;
+};
+
+
+//  create packet elements
+let packetElements = [];
+for (let packet of packetArray) {
+  console.log(packet.location)
+  const dot = document.createElement('div');
+  dot.classList.add('dot');
+  dot.style.left = `${packet.location[0]}%`
+  dot.style.top = `${packet.location[1]}%`
+  packetElements.push(dot);
+  dot.style.visibility = 'hidden';
+  gameObj.appendChild(dot);
+
+  dot.addEventListener('animationend', () => {
+    dot.remove();
+  });
+  dot.addEventListener('click', function() {
+    updateConnectionInfo(packet);
+    selectDot(this);
+    selectedDotInfo = packet;
+    dotElement = this;
+    document.getElementById("accept").addEventListener("click", function() {
+      packet["acceptedRecommendation"] = true;
+      confirmClassification(dotElement, selectedDotInfo, packet.recommendation);
+    });
+  })
+}
+
+function delay(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function animatePackets() {
+  console.log("animating packets")
+  for (let i = 0; i < packetElements.length; i++) {
+    const dot = packetElements[i];
+    dot.style.animation = `dot-move ${timePerPacket}ms linear 1`;
+    await delay(timePerPacket / 2); // Adjust the delay as needed
+  }
+  await delay(timePerPacket);
+  endTrial()
+}
+
+
+
 // Define the `start` function to initialize the game
 const startTrial = () => {
+  // Create and add the central point without click events
+  const visualCenterDot = document.createElement('div');
+  visualCenterDot.classList.add('center-dot');
+  gameObj.appendChild(visualCenterDot);
 
-    let selectedDot = null;
-  
-    const timeForTrial = config.trialLength * 60000;
-    const timePerPacket = (config.packetTimeOnScreen * 1000) * packetArray.length <= timeForTrial ? config.packetTimeOnScreen * 1000 : timeForTrial / packetArray.length; 
-
-  
-    // Create and add the central point without click events
-    const visualCenterDot = document.createElement('div');
-    visualCenterDot.classList.add('center-dot');
-    gameObj.appendChild(visualCenterDot);
-  
-  
-    
-    createPacketElement(packetArray);
-  
-   // Define delay for packet release
-    function delay(milliseconds) {
-      return new Promise((resolve) => setTimeout(resolve, milliseconds));
-    }
-  
-    // Create and display packets with delays
-    async function createPacketElement(packets) {
-      for (let packet of packets) {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        dot.style.left = `${packet.location[0]}%`;
-        dot.style.top = `${packet.location[1]}%`;
-        dot.style.animation = `dot-move ${timePerPacket}ms linear 1`;
-        gameObj.appendChild(dot);
-  
-        // Add click event to update connection info and maintain reference
-        dot.addEventListener('click', function() {
-          updateConnectionInfo(packet);
-          selectDot(this);
-          selectedDotInfo = packet;
-          dotElement = this;
-          document.getElementById("accept").addEventListener("click", function() {
-            packet["acceptedRecommendation"] = true;
-            confirmClassification(dotElement, selectedDotInfo, packet.recommendation);
-          } )
-
-        });
-        setTimeout(() => {
-          dot.parentNode.removeChild(dot);
-        }, timePerPacket);
-        await delay(timePerPacket / 2);
-       
-      }
-      // end trial after last packet has finished
-      setTimeout(endTrial, timePerPacket)
-  }
-  
-    // Function to select a single dot
-    const selectDot = (dotElement) => {
-      if (selectedDot) {
-        selectedDot.classList.remove('selected');
-      }
-      selectedDot = dotElement;
-      selectedDot.classList.add('selected');
-    };
-  
-    // Function to update connection information
-    const updateConnectionInfo = (info) => {
-      document.getElementById('info-ip').textContent = `IP Address: ${info.ipAddress}`;
-      document.getElementById('info-country').textContent = `Country: ${info.country}`;
-      document.getElementById('info-checksum').textContent = `Checksum: ${info.checkSum}`;
-      document.getElementById('info-protocol').textContent = `Protocol: ${info.protocol}`;
-      document.getElementById('info-time').textContent = `Connection Time: ${info.time}`;
-      document.getElementById('info-certificates').textContent = `Certificates: ${info.certificates}`;
-      document.getElementById('info-portnumber').textContent = `Port Number: ${info.portNumber}`;
-      document.getElementById('info-classification').textContent = `Classification: ${info.classification}`;
-      document.getElementById('advice').textContent = `Recommendation: ${info.recommendation}`;
-  
-    };
- 
-  };
+  animatePackets();
+};
   
 // handle end of the trial
 const endTrial = () => {
-  pauseWebGazer();
+  // pauseWebGazer();
   let inputs = [];
   for (let [k,v] of packetArray.entries()) {
     if (v.classification !== v.recommendation) {

@@ -263,10 +263,12 @@ form {
   border-radius: 50%;
   position: absolute;
   background-color: aqua;
+ 
 
 }
 
 @keyframes dot-move {
+  from {visibility: initial}
   to {left: 50%; top:50%; transform: translate(-50%, -50%);}
 
   

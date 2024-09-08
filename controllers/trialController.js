@@ -44,6 +44,7 @@ exports.stopTrial = async (req, res, next) => {
         const trialEndTime = req.body["trialEndTime"];
 
         const trialType = req.session.trialNumber === 0 ? 'test' : 'main';
+        let trialVideoName = 'testing'
         
        
         const trialId = await req.dbServices.insertTrial(req.session.participantId, trialType, req.session.trialNumber, req.session.trialStartTime, trialEndTime, trialVideoName);

@@ -9,24 +9,19 @@
         <!-- JavaScript Libraries -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <script src="/public/scripts/webgazer.js"></script>
-        <script src="/public/scripts/webgazerHandler.js"></script>
+        <script src="/public/scripts/webgazer.js" async></script>
+        <!-- <script src="/public/scripts/webgazerHandler.js"></script> -->
         <!-- Favicon -->
         <link rel="icon" href="/public/assets/favicon.webp" type="image/x-icon">
         <!-- Page Title -->
         <title>Security Control Simulation System</title>
     </head>
 <script>
-    window.onload = function() {
-        resumeWebGazer();
-    }
     var packetArray = JSON.parse('<%- packetArray %>');
     var conditionText = "<%= conditionText %>";
     var group = "<%= group %>";
     var censoredInfo = "<%= censorship %>";
     var censoredArrayNumber = parseInt('<%= censoredArrayNumber %>');
-
-    
 </script>
 
 <body>
@@ -94,5 +89,25 @@
     <!-- Additional Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script type="module" src="../public/scripts/trial.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            webgazer.setRegression('ridge')
+                    .showVideo(false)
+                    .showFaceOverlay(false)
+                    .showFaceFeedbackBox(false)
+                    .showPredictionPoints(true)
+                    .applyKalmanFilter(false)
+                    .saveDataAcrossSessions(false)
+                    .begin()
+        });
+        setInterval(function() {
+            webgazer.getCurrentPrediction().then(function(prediction) {
+                if (prediction) {
+                // Process prediction
+                console.log(`x = ${prediction.x} and then y = ${prediction.y}`)
+                }
+            });
+        }, 500);
+    </script>
 </body>
 </html>
