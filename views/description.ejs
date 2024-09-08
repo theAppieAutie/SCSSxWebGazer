@@ -33,30 +33,13 @@
         <h3>
             Hello there! You are a cyber defense expert tasked with protecting a network by classifying incoming requests as "Trusted", "Suspect", or "Hostile" based on provided rules. Misclassifications may lead to a security breach or hinder other staff members from accessing the data needed for their jobs.
         </h3>
-        <button id="proceedToRules">Proceed</button>
+        <button id="proceedToConfigWebGazer">Proceed</button>
     </div>
 
 </body>
 <script>
-    document.getElementById("proceedToRules").addEventListener("click", () => {
-        window.location.href = '/information/rules';
-    })
-    document.addEventListener('DOMContentLoaded', async () => {
-        webgazer.setRegression('ridge')
-                .setGazeListener(function(data, elapsedTime) {
-                    if (data == null || !data.x || !data.y) {
-                        return;
-                    }
-                    const x = data.x;
-                    const y = data.y;
-
-                    // checkGazeSection(x,y);
-                    console.log(`x = ${x} ---- y = ${y}`);
-                })
-                .showVideo(false)
-                .showPredictionPoints(false)
-                .begin()
-
+    document.getElementById("proceedToConfigWebGazer").addEventListener("click", () => {
+        window.location.href = '/information/webgazerconfig';
     })
 </script>
 </html>

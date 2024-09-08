@@ -72,4 +72,8 @@ router.post("/debrief", (req, res) => {
     res.render("thanks.ejs");
 })
 
+router.get("/webgazerconfig", (req, res) => {
+    res.render("webgazerConfig.ejs");
+})
+
 module.exports = router;
