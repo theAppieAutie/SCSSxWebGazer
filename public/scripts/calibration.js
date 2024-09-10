@@ -1,87 +1,45 @@
-window.onload = function() {
-    const overlay = document.getElementById('overlay');
-    webgazer.setRegression('ridge')
-            .setTracker('TFFacemesh')
-            .showVideo(false)
-            .showFaceOverlay(false)
-            .showFaceFeedbackBox(false)
-            .showPredictionPoints(true)
-            .applyKalmanFilter(true)
-            .begin()
-    setInterval(() => {
-        webgazer.getCurrentPrediction()
-                .then(resolve => {
-                    const timestamp = Date.now();
-                    webgazer.storePoints(resolve.x, resolve.y, timestamp)
-                })
-                .catch(err => {
-                    console.log("Error", err)
-                })
-    }, 100);
-    // Set up calibration points and their event listeners
-    setupCalibrationPoints();
-};
-
-function setupCalibrationPoints() {
-    const points = document.getElementsByClassName('calibration-point');
-    for (let point of points) {
-        point.addEventListener('click', function() {
-            let rect = point.getBoundingClientRect();
-            webgazer.recordScreenPosition(rect.left + window.scrollX, rect.top + window.scrollY, 'click');
-            // Provide feedback to user about the calibration progress
-            point.style.backgroundColor = 'green';
-            point.classList.add('calibrated');
-            setUpArrays()
-            // Repeat calibration to improve accuracy
-            setTimeout(() => {
-                point.style.backgroundColor = 'red';
-            }, 2000);
-        });
-    }
+window.onload = async function() {
+        //start the webgazer tracker
+        await webgazer.setRegression('ridge') /* currently must set regression and tracker */
+                    //   .setTracker('clmtrackr')
+                      .setGazeListener(function(data, clock) {
+                        //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
+                        //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
+                       })
+                       .showVideoPreview(false)
+                       .showPredictionPoints(false)
+                       .applyKalmanFilter(true)
+                       .saveDataAcrossSessions(true)
+                       .begin();
+        webgazer
 }
 
-function setUpArrays() {
-    const points = webgazer.getStoredPoints();
-    const xPoints = Object.values(points[0])
-    const yPoints = Object.values(points[1])
-
-    for (let i = 0; i < xPoints.length; i++) {
-        console.log(checkGazeSection(xPoints[i], yPoints[i]));
-    }
-
+const proceed = () => {
+    window.confirm("Thank you. You are ready to proceed")
+    window.location.href = '/information/rules';
 }
 
-function checkCalibrationCompletion() {
-    const points = document.getElementsByClassName('calibration-point');
-    let allCalibrated = true;
-    for (let point of points) {
-        if (!point.classList.contains('calibrated')) {
-            allCalibrated = false;
-            break;
+
+let calibrationPointsClicks = {};
+
+const points = document.getElementsByClassName('calibration-point');
+
+for (let i = 0; i < points.length; i++) {
+    points[i].addEventListener('click', () => {
+        let point = points[i]
+        console.log(`it is ${calibrationPointsClicks[point.id]} that this has been clicked before`)
+        if (!calibrationPointsClicks[point.id]) {
+            calibrationPointsClicks[point.id] = 0;
         }
-    }
-    if (allCalibrated) {
-        document.getElementById('instructions').innerText = "Calibration complete. Move your gaze to test.";
-    }
-}
-
-function checkGazeSection(x, y) {
-    const sections = [
-        {color: "red", id: "Top Left", x1: 0, x2: window.innerWidth / 3, y1: 0, y2: window.innerHeight / 2},
-        {color: "orange", id: "Middle Top", x1: window.innerWidth / 3, x2: 2 * window.innerWidth / 3, y1: 0, y2: window.innerHeight / 2},
-        {color: "yellow", id: "Top Right", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: 0, y2: window.innerHeight / 2},
-        {color: "green", id: "Bottom Left", x1: 0, x2: window.innerWidth / 3, y1: window.innerHeight / 2, y2: window.innerHeight},
-        {color: "blue", id: "Middle Bottom", x1: window.innerWidth / 3, x2: 2 * window.innerWidth / 3, y1: window.innerHeight / 2, y2: window.innerHeight},
-        {color: "purple", id: "Bottom Right", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: window.innerHeight / 2, y2: window.innerHeight},
-    ];
-
-
-    for (let section of sections) {
-        if (x >= section.x1 && x <= section.x2 && y >= section.y1 && y <= section.y2) {
-            // console.log(`Section gaze is in ${section.id}`);
-            return section.id
+        console.log(`${calibrationPointsClicks[point.id]} number of click events on this element`)
+        calibrationPointsClicks[point.id]++;
+        if (calibrationPointsClicks[point.id] === 5) {
+            point.style.backgroundColor = "red";
         }
-    }
+        let numOfClicks = Object.values(calibrationPointsClicks);
+        if (numOfClicks.length === points.length && numOfClicks.every(num => num >= 5)) {
+            proceed();
+        }
+    })
+
 }
-
-

@@ -10,6 +10,45 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="/public/scripts/webgazer.js" async></script>
+        <script>
+            window.onload = function() {
+                webgazer.setRegression('ridge')
+                        .setTracker('TFFacemesh')
+                        .showVideo(false)
+                        .showFaceOverlay(false)
+                        .showFaceFeedbackBox(false)
+                        .showPredictionPoints(false)
+                        .applyKalmanFilter(true)
+                        .begin()
+                setInterval(() => {
+                    webgazer.getCurrentPrediction()
+                            .then(resolve => {
+                                const timestamp = Date.now();
+                                console.log(checkGazeSection(resolve.x, resolve.y))
+                            })
+                            .catch(err => {
+                                console.log("Error", err)
+                            })
+                }, 200);
+            }
+            function checkGazeSection(x, y) {
+                const sections = [
+                    {color: "red", id: "LEFT --- TOP", x1: 0, x2: window.innerWidth / 3, y1: 0, y2: window.innerHeight / 2},
+                    {color: "orange", id: "MIDDLE --- TOP", x1: window.innerWidth / 3, x2: 2 * window.innerWidth / 3, y1: 0, y2: window.innerHeight / 2},
+                    {color: "yellow", id: "RIGHT --- TOP", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: 0, y2: window.innerHeight / 2},
+                    {color: "green", id: "LEFT --- BOTTOM", x1: 0, x2: window.innerWidth / 3, y1: window.innerHeight / 2, y2: window.innerHeight},
+                    {color: "blue", id: "MIDDLE --- BOTTOM", x1: window.innerWidth / 3, x2: 2 * window.innerWidth / 3, y1: window.innerHeight / 2, y2: window.innerHeight},
+                    {color: "purple", id: "RIGHT --- BOTTOM", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: window.innerHeight / 2, y2: window.innerHeight},
+                ];
+
+                for (let section of sections) {
+                    if (x >= section.x1 && x <= section.x2 && y >= section.y1 && y <= section.y2) {
+                        console.log(section.id)
+                        break;
+                    }
+                }
+            }
+        </script>
         <!-- <script src="/public/scripts/webgazerHandler.js"></script> -->
         <!-- Favicon -->
         <link rel="icon" href="/public/assets/favicon.webp" type="image/x-icon">
@@ -89,25 +128,5 @@
     <!-- Additional Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script type="module" src="../public/scripts/trial.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            webgazer.setRegression('ridge')
-                    .showVideo(false)
-                    .showFaceOverlay(false)
-                    .showFaceFeedbackBox(false)
-                    .showPredictionPoints(true)
-                    .applyKalmanFilter(false)
-                    .saveDataAcrossSessions(false)
-                    .begin()
-        });
-        setInterval(function() {
-            webgazer.getCurrentPrediction().then(function(prediction) {
-                if (prediction) {
-                // Process prediction
-                console.log(`x = ${prediction.x} and then y = ${prediction.y}`)
-                }
-            });
-        }, 500);
-    </script>
 </body>
 </html>
