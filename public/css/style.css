@@ -263,16 +263,14 @@ form {
   border-radius: 50%;
   position: absolute;
   background-color: aqua;
- 
-
 }
 
 @keyframes dot-move {
-  from {visibility: initial}
-  to {left: 50%; top:50%; transform: translate(-50%, -50%);}
-
-  
+  from {opacity: 1;}
+  to {opacity: 1; left: 50%; top:50%; transform: translate(-50%, -50%);}
 }
+
+
 
 .dot.trusted {
   background-color: green;

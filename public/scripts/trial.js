@@ -61,7 +61,7 @@ const panelsElement = document.getElementsByClassName("panels")[0];
 let selectedDotInfo = null;
 let dotElement = null;
 const timeForTrial = config.trialLength * 60000;
-const timePerPacket = (config.packetTimeOnScreen * 1000) * packetArray.length <= timeForTrial ? config.packetTimeOnScreen * 1000 : timeForTrial / packetArray.length; 
+const timePerPacket = (config.packetTimeOnScreen * 1000) * packetArray.length <= timeForTrial ? config.packetTimeOnScreen : (timeForTrial / packetArray.length) / 1000; 
 
 
 
@@ -120,9 +120,9 @@ for (let packet of packetArray) {
   dot.classList.add('dot');
   dot.style.left = `${packet.location[0]}%`
   dot.style.top = `${packet.location[1]}%`
-  packetElements.push(dot);
-  dot.style.visibility = 'hidden';
+  dot.style.opacity = "0";
   gameObj.appendChild(dot);
+  
 
   dot.addEventListener('animationend', () => {
     dot.remove();
@@ -139,19 +139,15 @@ for (let packet of packetArray) {
   })
 }
 
-function delay(milliseconds) {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
 
-async function animatePackets() {
+function animatePackets() {
   console.log("animating packets")
-  for (let i = 0; i < packetElements.length; i++) {
-    const dot = packetElements[i];
-    dot.style.animation = `dot-move ${timePerPacket}ms linear 1`;
-    await delay(timePerPacket / 2); // Adjust the delay as needed
-  }
-  await delay(timePerPacket);
-  endTrial()
+  const packets = document.querySelectorAll('.dot');
+  packets.forEach((packet, index) => {
+    let delayTime = (index + 1) * timePerPacket / 2;
+    console.log(delayTime)
+    packet.style.animation = `dot-move ${timePerPacket}s linear ${delayTime}s 1`;
+  })
 }
 
 
@@ -168,7 +164,7 @@ const startTrial = () => {
   
 // handle end of the trial
 const endTrial = () => {
-  // pauseWebGazer();
+
   let inputs = [];
   for (let [k,v] of packetArray.entries()) {
     if (v.classification !== v.recommendation) {
@@ -201,5 +197,46 @@ function handleInput(data) {
 
 }
 
-// Execute the `start` function after a delay
-setTimeout(startTrial, 500);
+const sections = [
+  {color: "red", id: "LEFT --- TOP", x1: 0, x2: window.innerWidth / 3, y1: 0, y2: window.innerHeight / 2},
+  {color: "orange", id: "MIDDLE --- TOP", x1: window.innerWidth / 3, x2: 2 * window.innerWidth / 3, y1: 0, y2: window.innerHeight / 2},
+  {color: "yellow", id: "RIGHT --- TOP", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: 0, y2: window.innerHeight / 2},
+  {color: "green", id: "LEFT --- BOTTOM", x1: 0, x2: window.innerWidth / 3, y1: window.innerHeight / 2, y2: window.innerHeight},
+  {color: "blue", id: "MIDDLE --- BOTTOM", x1: window.innerWidth / 3, x2: 2 * window.innerWidth / 3, y1: window.innerHeight / 2, y2: window.innerHeight},
+  {color: "purple", id: "RIGHT --- BOTTOM", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: window.innerHeight / 2, y2: window.innerHeight},
+];
+
+window.addEventListener('load',() => {
+  let lastUpdate = 0;
+  const intervalForChecks = 200;
+  webgazer.params.moveTickSize = 100;
+  webgazer.params.dataTimestep = 200;
+  webgazer.setRegression('ridge')
+          .showVideoPreview(false)
+          .showPredictionPoints(false)
+          .applyKalmanFilter(false)
+          .saveDataAcrossSessions(true)
+          .setGazeListener((data, time) => {
+            if (data == null) {
+              return;
+            }
+            if (time - lastUpdate > intervalForChecks) {
+              lastUpdate = time;
+              const x = data.x;
+              const y = data.y;
+            }
+
+          })
+          .begin()
+          .then(() => {
+            startTrial();
+          });
+  function checkGazeSection(x, y) {
+    for (let section of sections) {
+        if (x >= section.x1 && x <= section.x2 && y >= section.y1 && y <= section.y2) {
+            console.log(section.id)
+            break;
+        }
+    }
+  }
+})

@@ -9,7 +9,7 @@ exports.startTrial = async (req, res, next) => {
         // Retrieve experiment info
         
         const condition = req.session.condition;
-        const group = req.session.group;
+        const group = req.session.groupName;
         const censorship = req.session.censoredInfo;
         let conditionText = '';
         const censoredArrayNumber = req.session.censoredArrayNumber;

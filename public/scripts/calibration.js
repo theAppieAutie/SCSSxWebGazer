@@ -15,10 +15,31 @@ window.onload = async function() {
 }
 
 const proceed = () => {
-    window.confirm("Thank you. You are ready to proceed")
+    
+    window.confirm("Thank you. You are ready to proceed");
     window.location.href = '/information/rules';
 }
 
+const calibrateWebGazer = point => {
+    const rect = point.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    webgazer.recordScreenPosition(x, y);
+}
+
+const updateUserFeedback = point => {
+    if (!calibrationPointsClicks[point.id]) {
+        calibrationPointsClicks[point.id] = 0;
+    }
+    calibrationPointsClicks[point.id]++;
+    if (calibrationPointsClicks[point.id] === 5) {
+        point.style.backgroundColor = "red";
+    }
+    let numOfClicks = Object.values(calibrationPointsClicks);
+    if (numOfClicks.length === points.length && numOfClicks.every(num => num >= 5)) {
+        proceed();
+    }
+}
 
 let calibrationPointsClicks = {};
 
@@ -27,19 +48,8 @@ const points = document.getElementsByClassName('calibration-point');
 for (let i = 0; i < points.length; i++) {
     points[i].addEventListener('click', () => {
         let point = points[i]
-        console.log(`it is ${calibrationPointsClicks[point.id]} that this has been clicked before`)
-        if (!calibrationPointsClicks[point.id]) {
-            calibrationPointsClicks[point.id] = 0;
-        }
-        console.log(`${calibrationPointsClicks[point.id]} number of click events on this element`)
-        calibrationPointsClicks[point.id]++;
-        if (calibrationPointsClicks[point.id] === 5) {
-            point.style.backgroundColor = "red";
-        }
-        let numOfClicks = Object.values(calibrationPointsClicks);
-        if (numOfClicks.length === points.length && numOfClicks.every(num => num >= 5)) {
-            proceed();
-        }
+        calibrateWebGazer(point);
+        updateUserFeedback(point);
     })
 
 }
