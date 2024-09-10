@@ -111,9 +111,9 @@ const updateConnectionInfo = (info) => {
   document.getElementById('advice').textContent = `Recommendation: ${info.recommendation}`;
 };
 
+let packetsFinished = 0;
 
 //  create packet elements
-let packetElements = [];
 for (let packet of packetArray) {
   console.log(packet.location)
   const dot = document.createElement('div');
@@ -125,7 +125,12 @@ for (let packet of packetArray) {
   
 
   dot.addEventListener('animationend', () => {
+    packetsFinished++;
+    if (packetsFinished === packetArray.length) {
+      endTrial()
+    }
     dot.remove();
+
   });
   dot.addEventListener('click', function() {
     updateConnectionInfo(packet);
@@ -150,11 +155,12 @@ function animatePackets() {
   })
 }
 
-
+var startedTracking;
 
 // Define the `start` function to initialize the game
 const startTrial = () => {
   // Create and add the central point without click events
+  startedTracking = new Date().toISOString();
   const visualCenterDot = document.createElement('div');
   visualCenterDot.classList.add('center-dot');
   gameObj.appendChild(visualCenterDot);
@@ -164,7 +170,11 @@ const startTrial = () => {
   
 // handle end of the trial
 const endTrial = () => {
-
+  console.log(startedTracking)
+  for (const ele of testingAccuracy) {
+    console.log(ele)
+  }
+  console.log(new Date().toISOString());
   let inputs = [];
   for (let [k,v] of packetArray.entries()) {
     if (v.classification !== v.recommendation) {
@@ -206,11 +216,22 @@ const sections = [
   {color: "purple", id: "RIGHT --- BOTTOM", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: window.innerHeight / 2, y2: window.innerHeight},
 ];
 
+let testingAccuracy = [];
+
+function checkGazeSection(x, y) {
+  for (let section of sections) {
+      if (x >= section.x1 && x <= section.x2 && y >= section.y1 && y <= section.y2) {
+          testingAccuracy.push(section.id);
+          break;
+      }
+  }
+}
+
 window.addEventListener('load',() => {
   let lastUpdate = 0;
-  const intervalForChecks = 200;
+  const intervalForChecks = 100;
   webgazer.params.moveTickSize = 100;
-  webgazer.params.dataTimestep = 200;
+  webgazer.params.dataTimestep = 100;
   webgazer.setRegression('ridge')
           .showVideoPreview(false)
           .showPredictionPoints(false)
@@ -224,6 +245,7 @@ window.addEventListener('load',() => {
               lastUpdate = time;
               const x = data.x;
               const y = data.y;
+              testingAccuracy.push({x, y, time})
             }
 
           })
@@ -231,12 +253,4 @@ window.addEventListener('load',() => {
           .then(() => {
             startTrial();
           });
-  function checkGazeSection(x, y) {
-    for (let section of sections) {
-        if (x >= section.x1 && x <= section.x2 && y >= section.y1 && y <= section.y2) {
-            console.log(section.id)
-            break;
-        }
-    }
-  }
 })
