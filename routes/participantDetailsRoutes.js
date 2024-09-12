@@ -19,10 +19,6 @@ router.get("/feedback", (req,res) => {
 
 router.post("/feedback", async (req, res) => {
   addFeedback(req, res);
-  // let feedback = req.body.feedback;
-  
-  // await req.dbServices.insertFeedback(req.session.username, feedback);
-  // res.redirect("/information/debrief")
 })
 
 

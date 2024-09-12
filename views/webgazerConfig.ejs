@@ -5,25 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebGazer Test</title>
     <script src="/public/scripts/webgazer.js" type="text/javascript"></script>
+    <style src="/public/css/style.css"></style>
     <style>
         .calibration-point {
-            width: 10px;
-            height: 10px;
+            width: 15px;
+            height: 15px;
             background-color: green;
             position: absolute;
             cursor: pointer;
         }
-        #overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        #section-text {
-            position: absolute;
+        #instrctions {
+            /* position: absolute;
             top:50%;
-            left:50%;
+            left:50%; */
             width: 300px;
             height: 100px;
             font-size: larger;
@@ -32,42 +26,49 @@
     </style>
 </head>
 <body>
-    <h1>WebGazer Eye Tracking Test</h1>
-    <div id="instructions">Click on each red dot while looking at it.</div>
-    <div id="overlay"></div>
-    <div id="section-text"></div>
-    <!-- Calibration Points -->
-    <!-- Top-Left Segment (Dice 4 pattern) -->
-    <!-- <div id="calibrationPoint1" class="calibration-point" style="left: 11.1%; top: 12.5%;"></div> -->
-    <div id="calibrationPoint2" class="calibration-point" style="left: 22.2%; top: 12.5%;"></div>
-    <div id="calibrationPoint4" class="calibration-point" style="left: 11.1%; top: 37.5%;"></div>
-    <div id="calibrationPoint5" class="calibration-point" style="left: 22.2%; top: 37.5%;"></div>
+    <!-- Navigation Bar -->
+    <nav class="custom-navbar">
+        <div class="navbar-logo">
+            <a>SCSS</a>
+        </div>
 
-    <!-- Top-Center Segment (Centered vertically with horizontal spacing) -->
-    <div id="calibrationPoint6" class="calibration-point" style="left: 38.8%; top: 25%;"></div>
-    <div id="calibrationPoint7" class="calibration-point" style="left: 61.1%; top: 25%;"></div>
+    </nav>
+    <section class="info">
+        <h1>WebGazer Eye Tracking Test</h1>
+        <div id="instructions">For optimum performane of the eye tracking software, please click on each green sqaure 5 times whilst looking directly at it until it turns red.</div>
+        <!-- Calibration Points -->
+        <!-- Top-Left Segment (Dice 4 pattern) -->
+        <!-- <div id="calibrationPoint1" class="calibration-point" style="left: 11.1%; top: 12.5%;"></div> -->
+        <div id="calibrationPoint2" class="calibration-point" style="left: 22.2%; top: 12.5%;"></div>
+        <div id="calibrationPoint4" class="calibration-point" style="left: 11.1%; top: 37.5%;"></div>
+        <div id="calibrationPoint5" class="calibration-point" style="left: 22.2%; top: 37.5%;"></div>
 
-    <!-- Top-Right Segment (Dice 4 pattern) -->
-    <div id="calibrationPoint8" class="calibration-point" style="left: 72.2%; top: 12.5%;"></div>
-    <div id="calibrationPoint9" class="calibration-point" style="left: 83.3%; top: 12.5%;"></div>
-    <div id="calibrationPoint11" class="calibration-point" style="left: 72.2%; top: 37.5%;"></div>
-    <div id="calibrationPoint12" class="calibration-point" style="left: 83.3%; top: 37.5%;"></div>
+        <!-- Top-Center Segment (Centered vertically with horizontal spacing) -->
+        <div id="calibrationPoint6" class="calibration-point" style="left: 38.8%; top: 25%;"></div>
+        <div id="calibrationPoint7" class="calibration-point" style="left: 61.1%; top: 25%;"></div>
 
-    <!-- Bottom-Left Segment (Dice 4 pattern) -->
-    <div id="calibrationPoint13" class="calibration-point" style="left: 11.1%; top: 62.5%;"></div>
-    <div id="calibrationPoint14" class="calibration-point" style="left: 22.2%; top: 62.5%;"></div>
-    <div id="calibrationPoint16" class="calibration-point" style="left: 11.1%; top: 87.5%;"></div>
-    <div id="calibrationPoint17" class="calibration-point" style="left: 22.2%; top: 87.5%;"></div>
+        <!-- Top-Right Segment (Dice 4 pattern) -->
+        <div id="calibrationPoint8" class="calibration-point" style="left: 72.2%; top: 12.5%;"></div>
+        <div id="calibrationPoint9" class="calibration-point" style="left: 83.3%; top: 12.5%;"></div>
+        <div id="calibrationPoint11" class="calibration-point" style="left: 72.2%; top: 37.5%;"></div>
+        <div id="calibrationPoint12" class="calibration-point" style="left: 83.3%; top: 37.5%;"></div>
 
-    <!-- Bottom-Center Segment (Centered vertically with horizontal spacing) -->
-    <div id="calibrationPoint18" class="calibration-point" style="left: 38.8%; top: 75%;"></div>
-    <div id="calibrationPoint19" class="calibration-point" style="left: 61.1%; top: 75%;"></div>
+        <!-- Bottom-Left Segment (Dice 4 pattern) -->
+        <div id="calibrationPoint13" class="calibration-point" style="left: 11.1%; top: 62.5%;"></div>
+        <div id="calibrationPoint14" class="calibration-point" style="left: 22.2%; top: 62.5%;"></div>
+        <div id="calibrationPoint16" class="calibration-point" style="left: 11.1%; top: 87.5%;"></div>
+        <div id="calibrationPoint17" class="calibration-point" style="left: 22.2%; top: 87.5%;"></div>
 
-    <!-- Bottom-Right Segment (Dice 4 pattern) -->
-    <div id="calibrationPoint20" class="calibration-point" style="left: 72.2%; top: 62.5%;"></div>
-    <div id="calibrationPoint21" class="calibration-point" style="left: 83.3%; top: 62.5%;"></div>
-    <div id="calibrationPoint23" class="calibration-point" style="left: 72.2%; top: 87.5%;"></div>
-    <div id="calibrationPoint24" class="calibration-point" style="left: 83.3%; top: 87.5%;"></div>
+        <!-- Bottom-Center Segment (Centered vertically with horizontal spacing) -->
+        <div id="calibrationPoint18" class="calibration-point" style="left: 38.8%; top: 75%;"></div>
+        <div id="calibrationPoint19" class="calibration-point" style="left: 61.1%; top: 75%;"></div>
+
+        <!-- Bottom-Right Segment (Dice 4 pattern) -->
+        <div id="calibrationPoint20" class="calibration-point" style="left: 72.2%; top: 62.5%;"></div>
+        <div id="calibrationPoint21" class="calibration-point" style="left: 83.3%; top: 62.5%;"></div>
+        <div id="calibrationPoint23" class="calibration-point" style="left: 72.2%; top: 87.5%;"></div>
+        <div id="calibrationPoint24" class="calibration-point" style="left: 83.3%; top: 87.5%;"></div>
+    </section>
     <script src="/public/scripts/calibration.js"></script>
 </body>
 </html>

@@ -47,7 +47,7 @@ a, a:hover, ul, li {
   text-decoration: none;
 }
 
-/* Login Form */
+/* Login Form
 .login form {
   display: flex;
   flex-direction: column;
@@ -82,7 +82,7 @@ a, a:hover, ul, li {
   font-size: inherit;
   height: 10vh;
   width: 35vw;
-}
+} */
 
 form button {
   color: #18171C;
