@@ -38,16 +38,15 @@ exports.startTrial = async (req, res, next) => {
 }
 
 
-
 exports.stopTrial = async (req, res, next) => {
     try {
+
         const trialEndTime = req.body["trialEndTime"];
 
         const trialType = req.session.trialNumber === 0 ? 'test' : 'main';
-        let trialVideoName = 'testing'
         
        
-        const trialId = await req.dbServices.insertTrial(req.session.participantId, trialType, req.session.trialNumber, req.session.trialStartTime, trialEndTime, trialVideoName);
+        const trialId = await req.dbServices.insertTrial(req.session.participantId, trialType, req.session.trialNumber, req.session.trialStartTime, trialEndTime);
       
 
         req.session.trialNumber++;
@@ -60,6 +59,11 @@ exports.stopTrial = async (req, res, next) => {
             await req.dbServices.insertPacket(trialId, input.user, input.advisor, input.accepted, input.time);
        
         }
+
+        for (let gazeData of req.body['gazeData']) {
+            await req.dbServices.insertGazeData(trialId, gazeData.x, gazeData.y, gazeData.time);
+        }
+
         res.redirect("/information/rules");
         
     } catch (err) {

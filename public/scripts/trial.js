@@ -170,11 +170,6 @@ const startTrial = () => {
   
 // handle end of the trial
 const endTrial = () => {
-  console.log(startedTracking)
-  for (const ele of testingAccuracy) {
-    console.log(ele)
-  }
-  console.log(new Date().toISOString());
   let inputs = [];
   for (let [k,v] of packetArray.entries()) {
     if (v.classification !== v.recommendation) {
@@ -195,7 +190,7 @@ function handleInput(data) {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({input:data, trialEndTime})
+    body: JSON.stringify({input:data, trialEndTime, gazeData})
   }) .then(response => {
     if(response.redirected) {
       window.location.href = response.url;
@@ -216,20 +211,9 @@ const sections = [
   {color: "purple", id: "RIGHT --- BOTTOM", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: window.innerHeight / 2, y2: window.innerHeight},
 ];
 
-let testingAccuracy = [];
-
-function checkGazeSection(x, y) {
-  for (let section of sections) {
-      if (x >= section.x1 && x <= section.x2 && y >= section.y1 && y <= section.y2) {
-          testingAccuracy.push(section.id);
-          break;
-      }
-  }
-}
+let gazeData = [];
 
 window.addEventListener('load',() => {
-  let lastUpdate = 0;
-  const intervalForChecks = 100;
   webgazer.params.moveTickSize = 100;
   webgazer.params.dataTimestep = 100;
   webgazer.setRegression('ridge')
@@ -241,12 +225,8 @@ window.addEventListener('load',() => {
             if (data == null) {
               return;
             }
-            if (time - lastUpdate > intervalForChecks) {
-              lastUpdate = time;
-              const x = data.x;
-              const y = data.y;
-              testingAccuracy.push({x, y, time})
-            }
+            gazeData.push({ x : data.x, y : data.y, time})
+            
 
           })
           .begin()

@@ -56,8 +56,8 @@ const getNextId = async () => {
 const insertTrial = async (participant, type, number, start, end, url) => {
     const client = await pool.connect();
     try {
-        const query = 'INSERT INTO trials (participant_id, trial_type, trial_number, start_time, end_time, video_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING trial_id;';
-        const values = [participant, type, number, start, end, url];
+        const query = 'INSERT INTO trials (participant_id, trial_type, trial_number, start_time, end_time) VALUES ($1, $2, $3, $4, $5) RETURNING trial_id;';
+        const values = [participant, type, number, start, end];
         const result = await client.query(query, values);
         return result.rows[0].trial_id;
     } finally {
@@ -73,11 +73,24 @@ const insertPacket = async (trial, user, advisor, accepted, time) => {
         const result = await client.query(query, values);
         // return result.rows[0].trial_id;
     } catch (err) {
-        console.error("coulnt add packet input", err.stack); 
+        console.error("couldnt add packet input", err.stack); 
     } finally {
         client.release();
     }
 };
+
+const insertGazeData = async(trial, x, y, elapsedTime) => {
+    const client = await pool.connect();
+    try {
+        const query = 'INSERT INTO gaze_data (trial_id, x, y, elapsed_time) VALUES ($1, $2, $3, $4);';
+        const values = [trial, x, y, elapsedTime];
+        const result = await client.query(query, values);
+    } catch (err) {
+        console.error("error inserting gaze data" , err.stack);
+    } finally {
+        client.release();
+    }
+}
 
 const insertScale = async (participant, type, phase) => {
    
@@ -122,7 +135,8 @@ const dbServices = {
     insertPacket,
     insertTrial,
     insertParticipant,
-    getNextId
+    getNextId,
+    insertGazeData
 };
 
 module.exports =   dbServices;
