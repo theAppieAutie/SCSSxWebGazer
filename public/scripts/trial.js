@@ -155,12 +155,9 @@ function animatePackets() {
   })
 }
 
-var startedTracking;
-
 // Define the `start` function to initialize the game
 const startTrial = () => {
   // Create and add the central point without click events
-  startedTracking = new Date().toISOString();
   const visualCenterDot = document.createElement('div');
   visualCenterDot.classList.add('center-dot');
   gameObj.appendChild(visualCenterDot);
@@ -201,15 +198,6 @@ function handleInput(data) {
   })
 
 }
-
-const sections = [
-  {color: "red", id: "LEFT --- TOP", x1: 0, x2: window.innerWidth / 3, y1: 0, y2: window.innerHeight / 2},
-  {color: "orange", id: "MIDDLE --- TOP", x1: window.innerWidth / 3, x2: 2 * window.innerWidth / 3, y1: 0, y2: window.innerHeight / 2},
-  {color: "yellow", id: "RIGHT --- TOP", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: 0, y2: window.innerHeight / 2},
-  {color: "green", id: "LEFT --- BOTTOM", x1: 0, x2: window.innerWidth / 3, y1: window.innerHeight / 2, y2: window.innerHeight},
-  {color: "blue", id: "MIDDLE --- BOTTOM", x1: window.innerWidth / 3, x2: 2 * window.innerWidth / 3, y1: window.innerHeight / 2, y2: window.innerHeight},
-  {color: "purple", id: "RIGHT --- BOTTOM", x1: 2 * window.innerWidth / 3, x2: window.innerWidth, y1: window.innerHeight / 2, y2: window.innerHeight},
-];
 
 let gazeData = [];
 

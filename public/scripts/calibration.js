@@ -3,15 +3,15 @@ window.onload = async function() {
         await webgazer.setRegression('ridge') /* currently must set regression and tracker */
                     //   .setTracker('clmtrackr')
                       .setGazeListener(function(data, clock) {
-                        //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
-                        //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
+                        // left the listener in because unsure of effects without it when certain it does not
+                        // it does not change webgazer tracking can be removed
                        })
                        .showVideoPreview(false)
                        .showPredictionPoints(false)
                        .applyKalmanFilter(true)
                        .saveDataAcrossSessions(true)
                        .begin();
-        webgazer
+        document.getElementById("webgazerVideoContainer").style.display = "none";
 }
 
 const proceed = () => {

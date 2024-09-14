@@ -48,35 +48,9 @@ const generateRandomCountry = () => {
   return countries[Math.floor(Math.random() * countries.length)];
 };
 
-// Generate a random packet size between 500 and 1500 bytes
-const generateRandomPacketSize = () => {
-  return `${Math.floor(Math.random() * 1000) + 500} bytes`;
-};
-
-// Generate a random protocol from a predefined list
-const generateRandomProtocol = () => {
-  const protocols = ["TCP", "UDP", "ICMP", "HTTP", "HTTPS"];
-  return protocols[Math.floor(Math.random() * protocols.length)];
-};
-
-// Generate a random connection time between 0 and 59 seconds
-const generateRandomConnectionTime = () => {
-  return `${Math.floor(Math.random() * 60)} s`;
-};
-
-// Generate a random SSL/TLS certificate status
-const generateRandomCertificates = () => {
-  const statuses = ["Valid", "Invalid", "Self-signed", "Expired"];
-  return statuses[Math.floor(Math.random() * statuses.length)];
-};
-
 module.exports = {
-  generateRandomCertificates,
   generateRandomCheckSum,
-  generateRandomConnectionTime,
   generateRandomCountry,
   generateRandomIP,
-  generateRandomPacketSize,
-  generateRandomProtocol,
   generateRandomTime
 };

@@ -50,7 +50,7 @@ exports.addScaleToDB = async (req, res) => {
     const typeOfScale = getScaleType(data);
     const inputs = Object.values(data);
 
-    let scaleId = await req.dbServices.insertScale(req.session.username, typeOfScale, category);
+    let scaleId = await req.dbServices.insertScale(req.session.participantId, typeOfScale, category);
 
     for (let i = 0; i < inputs.length; i++){
       await req.dbServices.insertItem(i+1, scaleId, inputs[i]);
