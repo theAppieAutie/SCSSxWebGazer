@@ -34,4 +34,10 @@
  items      | scale_id    | integer FOREIGN KEY -> scales
  items      | item_value  | integer
 
+ gaze_data  | id          | integer
+ gaze_data  | trial_id    | integer FOREIGN KEY -> trials 
+ gaze_data  | x           | float
+ gaze_data  | y           | float
+ gaze_data  | elapsed_time| integer
+
 
