@@ -61,6 +61,11 @@ router.get("/rules", checkStageOfExperiment, (req, res) => {
     res.render("rules.ejs");
 });
 
+// instructions view
+router.get("/instructions", (req, res) => {
+    const condition = req.session.condition
+    res.render("instructions.ejs", {condition:condition})
+})
 
 // debrief routes
 router.get("/debrief", (req, res) => {

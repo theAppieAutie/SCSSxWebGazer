@@ -17,7 +17,7 @@ window.onload = async function() {
 const proceed = () => {
     
     window.confirm("Thank you. You are ready to proceed");
-    window.location.href = '/information/rules';
+    window.location.href = '/information/instructions';
 }
 
 const calibrateWebGazer = point => {

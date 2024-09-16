@@ -10,7 +10,7 @@
 
 
  trials     | trial_number   | integer
- trials     | participant_id | integer FOREIGN KEY -> patricipants
+ trials     | participant_id | integer FOREIGN KEY -> participants
  trials     | start_time     | timestamp without time zone
  trials     | end_time       | timestamp without time zone
  trials     | trial_id       | integer
