@@ -7,7 +7,7 @@ This program simulates three different types of advisory systems to evaluate how
     AI Advisor
     Human Advisor
 
-Participants are tasked as cyber defense experts to protect a network by classifying incoming requests as "Safe," "Neutral," or "Hostile" based on provided rules. Misclassifications may lead to a security breach or prevent staff from accessing essential data.
+Participants are tasked as cyber defense experts to protect a network by classifying incoming requests as "Trusted," "Suspect," or "Hostile" based on provided rules. Misclassifications may lead to a security breach or prevent staff from accessing essential data.
 
 The system utilizes a Battlespace Management Task (Hodgetts et al., 2015), adapted to fit the terminology of a cyber defense task. The network is at the center of the radar screen, surrounded by incoming internet traffic represented by radar dots. Participants must click on these dots to view their parameters (e.g., country of origin, packet size) and classify them accordingly.
 
@@ -30,21 +30,22 @@ The objective of this experiment is to evaluate how people respond to advice fro
     Eye Tracking Integration:
     Analyzes participants' gaze patterns during decision-making tasks.
 
+    This project utilises webgazer.js, an open-source eye-tracking library developed by the Brown HCI group, for implementing eye-tracking functionality.
+    https://github.com/brownhci/WebGazer 
+
 🛠️ Prerequisites
 
-Ensure you have Node.js and npm 📦 installed on your system. Download and install them from Node.js official website.
-This software is designed to be used with PostgreSQL. For futher information regarding download and set up of this see their official website.
+    Ensure you have Node.js and npm 📦 installed on your system. Download and install them from Node.js official website.
+    This software is designed to be used with PostgreSQL. For futher information regarding download and set up of this see their official website.
 
-Additionally, this adaptation is designed to work with Dropbox SDK for Node.js and eye tracking software. The latter was hosted else where with endpoints for start, stop and download (see /services/flaskServices.js).
-For the software to run locally without the use of these requires removal of commands relating to them which can be found within /services/flaskServices.js && cloudServices.js and also /controllers/trialController.js
 
 🚀 Installing
 
     🖥️ Clone the repository:
-    git clone https://github.com/theAppieAutie/SCSSv3.git
+    git clone https://github.com/theAppieAutie/SCSSxWebGazer.git
 
     📁 Navigate to the project folder:
-    cd SCSSv3
+    cd SCSSxWebGazer
 
     ⬇️ Install dependencies:
     npm install
@@ -55,20 +56,21 @@ For the software to run locally without the use of these requires removal of com
 
     🔑 Add the following line to set your SESSION_SECRET:
 
-SESSION_SECRET=your_secret_here Replace your_secret_here with a unique, strong value.
-DB_USER=your db user name 
-DB_PASSWORD= your db password
-DB_DATABASE=your database name (usually postgres upon set up)
-DB_HOST=if hosting locally then 'localhost'
-DB_PORT=port postgresql is listening on - defaults to 5432
+    SESSION_SECRET=your_secret_here Replace your_secret_here with a unique, strong value.
+    DB_USER=your db user name 
+    DB_PASSWORD= your db password
+    DB_DATABASE=your database name (usually postgres upon set up)
+    DB_HOST=if hosting locally then 'localhost'
+    DB_PORT=port postgresql is listening on - defaults to 5432
 
     🔄 To make the environment variables accessible, type:
 
-export $(cat .env | xargs)
+    export $(cat .env | xargs)
+
 🖥️ Usage
 
     🔥 Start the server:
-    npm run devStart
+    npm run dev
 
     🌐 Open a browser and go to the configured port in server.js.
 
