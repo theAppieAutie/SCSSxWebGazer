@@ -54,7 +54,7 @@ The objective of this experiment is to evaluate how people respond to advice fro
 
     📄 Create a .env file in the project's root directory.
 
-    🔑 Add the following line to set your SESSION_SECRET:
+    🔑 Add the following variables with your values:
 
     SESSION_SECRET=your_secret_here Replace your_secret_here with a unique, strong value.
     DB_USER=your db user name 
