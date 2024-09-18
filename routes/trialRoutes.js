@@ -1,7 +1,7 @@
 // imports
 
 const express = require('express');
-const {startTrial, stopTrial} = require('../controllers/trialController');
+const {startTrial, stopTrial, addGazeData} = require('../controllers/trialController');
 
 const router = express.Router();
 
@@ -12,6 +12,8 @@ router.get('/trial', async (req, res) => startTrial(req, res));
   
   //  handle adding data to Experiment
 router.post("/addTrial", async (req, res) => stopTrial(req, res));
+
+router.post("/addGazeData", async (req, res) => addGazeData(req, res));
 
 
 module.exports =   router;

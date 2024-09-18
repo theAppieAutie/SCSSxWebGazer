@@ -178,28 +178,55 @@ const endTrial = () => {
 
 }
 
-// handle participant input
-function handleInput(data) {
-  const trialEndTime = new Date().toISOString();
-  fetch('/trial/addTrial', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({input:data, trialEndTime, gazeData})
-  }) .then(response => {
-    if(response.redirected) {
-      window.location.href = response.url;
-    }
-  })
-  .catch(err => {
-    console.error(err)
-  })
-
-}
-
 let gazeData = [];
+
+// handle participant input
+const handleGazeData = async () => {
+  try {
+    const response = await fetch('/trial/addGazeData', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ gazeData })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    } else {
+      window.location.href = "/information/rules"
+    }
+  } catch (err) {
+    console.log('Error:', err);
+  }
+};
+
+const handleInput = async (data) => {
+  try {
+    const trialEndTime = new Date().toISOString();
+    const response = await fetch('/trial/addTrial', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ input: data, trialEndTime })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Regular data response:', result);
+
+    // Call handleGazeData after the first request is completed
+    await handleGazeData();
+  } catch (err) {
+    console.error('Error:', err);
+  }
+};
 
 window.addEventListener('load',() => {
   webgazer.params.moveTickSize = 100;

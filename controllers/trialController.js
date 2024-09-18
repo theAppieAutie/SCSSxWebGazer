@@ -59,17 +59,30 @@ exports.stopTrial = async (req, res, next) => {
             await req.dbServices.insertPacket(trialId, input.user, input.advisor, input.accepted, input.time);
        
         }
+        console.log("finsihed adding trial data")
+        res.status(200).json({ message: 'Regular data received successfully' });
 
-        for (let gazeData of req.body['gazeData']) {
-            await req.dbServices.insertGazeData(trialId, gazeData.x, gazeData.y, gazeData.time);
-        }
-
-        res.redirect("/information/rules");
         
     } catch (err) {
         console.error("Error caught :",err);
     }
 
+}
+
+exports.addGazeData = async (req, res, next) => {
+    try {
+        console.log("started adding gaze data")
+
+        const trialId = await req.dbServices.getLastTrialId();
+
+        for (let gazeData of req.body['gazeData']) {
+            await req.dbServices.insertGazeData(trialId, gazeData.x, gazeData.y, gazeData.time);
+        }
+
+        res.status(200).json({message: "Gaze Data stored"})
+    } catch (err) {
+        console.log("Error: ", err)
+    }
 }
 
 
